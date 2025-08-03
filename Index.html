@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="gu">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ગુજરાતી ક્વિઝ</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Gujarati&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Noto Sans Gujarati', sans-serif;
+    }
+    body {
+      background: linear-gradient(to bottom right, #ffecb3, #ffe082);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .quiz-container {
+      background: #ffffff;
+      padding: 25px;
+      border-radius: 20px;
+      width: 90%;
+      max-width: 500px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      border: 4px dashed #ff9800;
+      animation: fadeIn 0.8s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 15px;
+      font-size: 26px;
+      color: #e65100;
+    }
+    p {
+      text-align: center;
+      margin-bottom: 15px;
+      color: #5d4037;
+      font-size: 18px;
+    }
+    .level-btn, .next-btn, #answer-buttons button {
+      padding: 14px;
+      font-size: 18px;
+      border: none;
+      border-radius: 12px;
+      margin: 10px 0;
+      width: 100%;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .level-btn {
+      background-color: #ffcc80;
+      color: #4e342e;
+    }
+    .level-btn:hover {
+      background-color: #ffa726;
+    }
+    #question {
+      font-size: 20px;
+      margin-bottom: 15px;
+      color: #4e342e;
+      text-align: center;
+    }
+    #answer-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    #answer-buttons button {
+      background-color: #fff3e0;
+      color: #4e342e;
+    }
+    #answer-buttons button:hover {
+      background-color: #ffe0b2;
+    }
+    .correct {
+      background-color: #a5d6a7 !important;
+    }
+    .wrong {
+      background-color: #ef9a9a !important;
+    }
+    .next-btn {
+      background-color: #ff9800;
+      color: white;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="quiz-container">
+    <div id="start-screen">
+      <h1>🪔 ગુજરાતી ક્વિઝ</h1>
+      <p>કૃપા કરીને સ્તર પસંદ કરો:</p>
+      <button class="level-btn" onclick="startQuiz('easy')">🎈 સરળ</button>
+      <button class="level-btn" onclick="startQuiz('normal')">🧠 સામાન્ય</button>
+      <button class="level-btn" onclick="startQuiz('hard')">🔥 કઠિન</button>
+    </div>
+
+    <div id="quiz-screen" style="display: none;">
+      <div id="question-container">
+        <div id="question">પ્રશ્ન લોડ થઈ રહ્યો છે...</div>
+        <div id="answer-buttons" class="btn-grid"></div>
+      </div>
+      <button id="next-btn" class="next-btn">આગળ વધો</button>
+    </div>
+  </div>
+
+  <script>
+    const levels = {
+      easy: [
+        { question: "ગુજરાતની રાજધાની કઈ છે?", answers: [{ text: "ગાંધીનગર", correct: true }, { text: "અમદાવાદ", correct: false }, { text: "મુંબઈ", correct: false }, { text: "સુરત", correct: false }] },
+        { question: "સૂર્ય ક્યાંથી ઉગે છે?", answers: [{ text: "પૂર્વ", correct: true }, { text: "પશ્ચિમ", correct: false }, { text: "ઉત્તર", correct: false }, { text: "દક્ષિણ", correct: false }] },
+        { question: "2 + 2 કેટલા થાય?", answers: [{ text: "4", correct: true }, { text: "3", correct: false }, { text: "5", correct: false }, { text: "6", correct: false }] },
+        { question: "પાણીનું રાસાયણિક ફોર્મ્યુલા શું છે?", answers: [{ text: "H₂O", correct: true }, { text: "O₂", correct: false }, { text: "CO₂", correct: false }, { text: "NaCl", correct: false }] },
+        { question: "સપ્તાહમાં કેટલા દિવસ હોય છે?", answers: [{ text: "7", correct: true }, { text: "5", correct: false }, { text: "6", correct: false }, { text: "8", correct: false }] },
+        { question: "આપણે શું શ્વસન કરીએ છીએ?", answers: [{ text: "ઓક્સિજન", correct: true }, { text: "કાર્બન", correct: false }, { text: "નાઇટ્રોજન", correct: false }, { text: "હેલિયમ", correct: false }] },
+        { question: "હાથીનું બાળક શું કહેવાય?", answers: [{ text: "કડકણ", correct: true }, { text: "માદું", correct: false }, { text: "કીડિયો", correct: false }, { text: "છોકરો", correct: false }] },
+        { question: "ભારતનું રાષ્ટ્રીય પક્ષી શું છે?", answers: [{ text: "મોર", correct: true }, { text: "કબૂતર", correct: false }, { text: "કાગડો", correct: false }, { text: "ઘૂઘવટ", correct: false }] },
+        { question: "રાષ્ટ્રીય ધ્વજમાં કેટલા રંગો છે?", answers: [{ text: "3", correct: true }, { text: "4", correct: false }, { text: "2", correct: false }, { text: "5", correct: false }] },
+        { question: "વિજ્ઞાનનું અંગ્રેજી શું છે?", answers: [{ text: "Science", correct: true }, { text: "Math", correct: false }, { text: "Drawing", correct: false }, { text: "History", correct: false }] }
+      ],
+      normal: [
+        { question: "ભારતના રાષ્ટ્રપિતા કોણ હતા?", answers: [{ text: "મહાત્મા ગાંધી", correct: true }, { text: "જવાહરલાલ નહેરુ", correct: false }, { text: "ડૉ. આંબેડકર", correct: false }, { text: "સર્દાર પટેલ", correct: false }] },
+        { question: "ભારતમાં કુલ કેટલા રાજ્ય છે?", answers: [{ text: "28", correct: true }, { text: "29", correct: false }, { text: "30", correct: false }, { text: "26", correct: false }] },
+        // Add more questions as needed...
+      ],
+      hard: [
+        { question: "હરપ્પા સંસ્કૃતિ કઈ નદીના કાંઠે હતી?", answers: [{ text: "સિંદુ", correct: true }, { text: "ગંગા", correct: false }, { text: "યમુના", correct: false }, { text: "નર્મદા", correct: false }] },
+        { question: "આઈન-એ-અકબરી કોણે લખ્યું હતું?", answers: [{ text: "અબુલ ફઝલ", correct: true }, { text: "બીરબલ", correct: false }, { text: "અકબર", correct: false }, { text: "તાન્સેન", correct: false }] },
+        // Add more questions as needed...
+      ]
+    };
+
+    let selectedQuestions = [];
+    let currentQuestionIndex = 0;
+    let score = 0;
+
+    const startScreen = document.getElementById('start-screen');
+    const quizScreen = document.getElementById('quiz-screen');
+    const questionEl = document.getElementById('question');
+    const answerButtons = document.getElementById('answer-buttons');
+    const nextButton = document.getElementById('next-btn');
+
+    function startQuiz(level) {
+      currentQuestionIndex = 0;
+      score = 0;
+      selectedQuestions = shuffleArray(levels[level]).slice(0, 10);
+
+      startScreen.style.display = 'none';
+      quizScreen.style.display = 'block';
+      nextButton.innerHTML = "આગળ વધો";
+      showQuestion();
+    }
+
+    function showQuestion() {
+      resetState();
+      const currentQuestion = selectedQuestions[currentQuestionIndex];
+      questionEl.innerText = `પ્રશ્ન ${currentQuestionIndex + 1}: ${currentQuestion.question}`;
+      currentQuestion.answers.forEach(answer => {
+        const button = document.createElement("button");
+        button.innerText = answer.text;
+        if (answer.correct) button.dataset.correct = answer.correct;
+        button.addEventListener("click", selectAnswer);
+        answerButtons.appendChild(button);
+      });
+    }
+
+    function resetState() {
+      nextButton.style.display = "none";
+      answerButtons.innerHTML = '';
+    }
+
+    function selectAnswer(e) {
+      const selectedBtn = e.target;
+      const isCorrect = selectedBtn.dataset.correct === "true";
+      if (isCorrect) {
+        selectedBtn.classList.add("correct");
+        score++;
+      } else {
+        selectedBtn.classList.add("wrong");
+      }
+
+      Array.from(answerButtons.children).forEach(button => {
+        if (button.dataset.correct === "true") button.classList.add("correct");
+        button.disabled = true;
+      });
+
+      nextButton.style.display = "block";
+    }
+
+    function showScore() {
+      resetState();
+      questionEl.innerText = `તમારું સ્કોર: ${score} / 10`;
+      nextButton.innerText = "ફરી શરૂ કરો";
+      nextButton.style.display = "block";
+    }
+
+    function handleNextButton() {
+      currentQuestionIndex++;
+      if (currentQuestionIndex < selectedQuestions.length) {
+        showQuestion();
+      } else {
+        showScore();
+      }
+    }
+
+    nextButton.addEventListener("click", () => {
+      if (currentQuestionIndex < selectedQuestions.length) {
+        handleNextButton();
+      } else {
+        startScreen.style.display = 'block';
+        quizScreen.style.display = 'none';
+      }
+    });
+
+    function shuffleArray(array) {
+      return [...array].sort(() => Math.random() - 0.5);
+    }
+  </script>
+</body>
+</html>
